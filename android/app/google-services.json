@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "696594522953",
+    "firebase_url": "https://melabolic-flower-explorer.firebaseio.com",
+    "project_id": "melabolic-flower-explorer",
+    "storage_bucket": "melabolic-flower-explorer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:696594522953:android:4bd6cafebfc0682b67f098",
+        "android_client_info": {
+          "package_name": "com.melabolic.flower_explorer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "696594522953-s4cctttihpb9ukl2vs1o4c6pbfnfdk81.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR3jKH4dG7gxLhBw1kKFY6HC7dnWUT3dI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "696594522953-s4cctttihpb9ukl2vs1o4c6pbfnfdk81.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
