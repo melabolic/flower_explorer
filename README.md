@@ -8,7 +8,7 @@
 
 ### Some important information
 
-1. **This code is not complete**. I'm still trying to solve an active issue with the code, but other than that, it should be up and running as expected.
+1. **This code is not complete**. I'm still trying to resolve an active issue with the code (where one of the buttons won't update as its state changes), but other than that, it should be up and running as expected.
 2. In order to run this code on an emulator, you will need to first install Flutter. The instructions can be found [here](https://flutter.dev/docs/get-started/install). I recommend following through the [next page](https://flutter.dev/docs/get-started/editor) to set up Dart and Flutter for your editor as well.
 3. As of now, Firestore support of my app is only configured for Android devices. Please test the code using an Android Simulator.
 
