@@ -36,7 +36,9 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
             collection.where("occasion", arrayContains: occasion).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return ListView(
               // creates a vertically scrollable widget

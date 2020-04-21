@@ -22,4 +22,8 @@ Once you have Flutter configured and set up for your device, running the app is 
 3. Locate the toolbar up on top and select the emulator you've created to run the app.
 4. To run the app, click on the run button in the toolbar, or invoke the menu item `Run > Run`.
 
+#### Alternate option:
+1. Download the apk file from the repo onto your phone.
+2. Install the app onto your Android device (you must enable permissions & installation).
+
 
