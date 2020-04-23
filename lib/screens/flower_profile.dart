@@ -11,11 +11,15 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  // FirestoreHelper firestoreHelper = FirestoreHelper();
   _ProfileState(this.document);
   DocumentSnapshot document;
 
   @override
   Widget build(BuildContext context) {
+    DocumentReference documentReference =
+        collection.document(document.documentID);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(document['name']),
@@ -33,55 +37,67 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Align(
               alignment: Alignment.topRight,
-              child: RaisedButton(
-                child: _favButton(),
-                onPressed: () async {
-                  print("It was ${document['favorite']}");
-                  if (document['favorite']) {
-                    await collection.document(document.documentID).updateData(
-                      {"favorite": false},
-                    );
-                  } else {
-                    await collection.document(document.documentID).updateData(
-                      {"favorite": true},
-                    );
+              // creates a stream that listens to the main database and make updates
+              // for the favorites button
+              child: StreamBuilder(
+                stream: documentReference.snapshots(),
+                builder: (BuildContext context, AsyncSnapshot snap) {
+                  if (!snap.hasData) {
+                    return null;
                   }
-                  setState(() {
-                    // TODO: find a way to update the button each time it is tapped on
-                  });
+                  // print(snap.data['name']);
+                  // print(snap.data['favorite']);
+                  return FlatButton(
+                    child: Container(
+                      width: (document['favorite'] ? 120 : 110),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          (snap.data['favorite']
+                              ? Text("Unfavorite")
+                              : Text("Favorite")),
+                          SizedBox(width: 12.0),
+                          (snap.data['favorite']
+                              ? Icon(Icons.favorite)
+                              : Icon(Icons.favorite_border)),
+                        ],
+                      ),
+                    ),
+                    onPressed: () async {
+                      bool _value = snap.data['favorite'] ? false : true;
+                      print(snap.data['favorite']);
+                      await documentReference.updateData({"favorite": _value});
+                      print(snap.data['favorite']);
+                    },
+                  );
                 },
               ),
             ),
             Image.network(
-              widget.document['image_url'],
+              document['image_url'],
               height: 300,
               width: 300,
             ),
             SizedBox(height: 20.0),
             Text(
-              widget.document['descriptor'],
+              document['descriptor'],
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _favButton() {
-    return Container(
-      width: (document['favorite'] ? 182 : 140),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          (document['favorite']
-              ? Text("Remove from Favorites")
-              : Text("Add to Favorites")),
-          SizedBox(width: 12.0),
-          (document['favorite']
-              ? Icon(Icons.favorite)
-              : Icon(Icons.favorite_border)),
-        ],
-      ),
-    );
-  }
 }
+
+/* 
+if (document['favorite']) {
+                      await collection.document(document.documentID).updateData(
+                        {"favorite": true},
+                      );
+                    } else {
+                      await collection.document(document.documentID).updateData(
+                        {"favorite": true},
+                      );
+                    }
+                    setState(() {});
+*/
