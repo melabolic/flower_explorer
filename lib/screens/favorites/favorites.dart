@@ -3,6 +3,7 @@ import 'package:flower_explorer/screens/flower_profile.dart';
 import 'package:flower_explorer/services/firestore_db.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flower_explorer/assets/type_family.dart';
 
 /*
   This class creates our favorites page (as accessible from the bottom navigation bar).
@@ -16,7 +17,6 @@ class Favorites extends StatefulWidget {
 }
 
 class _FavoritesState extends State<Favorites> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,13 +36,11 @@ class _FavoritesState extends State<Favorites> {
               return Center(
                 child: Text(
                   "Nothing in favorites!",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                  ),
+                  style: bodyStyle,
                 ),
               );
-            } else { 
-              // otherwise, print out the names of the flowers, along with a delete 
+            } else {
+              // otherwise, print out the names of the flowers, along with a delete
               // button that will remove the entry
               return ListView(
                 padding: EdgeInsets.all(18.0),
@@ -73,7 +71,8 @@ class _FavoritesState extends State<Favorites> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(document['name']),
+                              const SizedBox(width: 10.0),
+                              Text(document['name'], style: buttonStyle),
                               GestureDetector(
                                   child: Icon(
                                     Icons.remove_circle,
@@ -111,4 +110,3 @@ class _FavoritesState extends State<Favorites> {
     );
   }
 }
-

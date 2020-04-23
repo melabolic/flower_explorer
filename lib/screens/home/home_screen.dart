@@ -1,4 +1,6 @@
 // Importing the necessary packages & files
+import 'package:flower_explorer/assets/color_schemes.dart';
+import 'package:flower_explorer/assets/custom_appBar.dart';
 import 'package:flower_explorer/screens/favorites/favorites.dart';
 import 'package:flower_explorer/screens/flower_display/flower_categories.dart';
 import "package:flutter/material.dart";
@@ -27,11 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Flower Explorer"),
-        ),
-        // placing the Navigator widget here is what enables me to route to the 
+        appBar: MyCustomAppBar(height: 80, title: "Flower Explorer"),
+        // placing the Navigator widget here is what enables me to route to the
         // many different pages in the app
         body: Navigator(
           key: _navigatorKey,
@@ -46,24 +45,34 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildNavigationBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem( // Home button
-          icon: Icon(Icons.home),
-          title: Text('Home'),
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          // Home button
+          icon: Icon(
+            Icons.home,
+            size: (_selectedIndex == 0) ? 40.0 : 30.0,
+            color: (_selectedIndex == 0) ? themeColor : Colors.grey,
+          ),
+          title: SizedBox.shrink(),
         ),
-        BottomNavigationBarItem( // Favorites button
-          icon: Icon(Icons.favorite),
-          title: Text('Favorites'),
+        BottomNavigationBarItem(
+          // Favorites button
+          icon: Icon(
+            Icons.favorite,
+            size: (_selectedIndex == 1) ? 36.0 : 30.0,
+            color: (_selectedIndex == 1) ? themeColor : Colors.grey,
+          ),
+          title: SizedBox.shrink(),
         ),
       ],
       currentIndex: _selectedIndex,
       selectedItemColor: Colors.deepOrange,
-      onTap: _onItemTapped, 
+      onTap: _onItemTapped,
     );
   }
 
-  // this function is what helps my app keep track of where the user is, and navigate to 
-  // the respective home and favorites pages when clicked on 
+  // this function is what helps my app keep track of where the user is, and navigate to
+  // the respective home and favorites pages when clicked on
   _onItemTapped(int tabIndex) {
     switch (tabIndex) {
       case 0:
@@ -91,4 +100,3 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 }
-

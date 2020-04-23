@@ -1,5 +1,6 @@
 // Adding the necessary imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flower_explorer/assets/type_family.dart';
 import 'package:flutter/material.dart';
 import 'package:flower_explorer/services/firestore_db.dart';
 
@@ -32,7 +33,7 @@ class _ProfileState extends State<Profile> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(document['name']),
+        title: Text(document['name'], style: barStyle),
         centerTitle: true,
         backgroundColor: Colors.grey,
       ),
@@ -54,7 +55,7 @@ class _ProfileState extends State<Profile> {
                 stream: documentReference.snapshots(),
                 builder: (BuildContext context, AsyncSnapshot snap) {
                   if (!snap.hasData) {
-                    return null;
+                    return CircularProgressIndicator();
                   }
                   // print(snap.data['name']); for testing purposes
                   // print(snap.data['favorite']);
@@ -62,16 +63,16 @@ class _ProfileState extends State<Profile> {
                   // building the automatically configured (un)favorites button
                   return FlatButton(
                     child: Container(
-                      width: (document['favorite'] ? 120 : 110),
+                      width: (snap.data['favorite'] ? 140 : 110),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
                           (snap.data['favorite']
-                              ? Text("Unfavorite")
-                              : Text("Favorite")),
+                              ? Text("UNFAVORITE", style: favButtonStyle,)
+                              : Text("FAVORITE", style: favButtonStyle,)),
                           SizedBox(width: 12.0),
                           (snap.data['favorite']
-                              ? Icon(Icons.favorite)
+                              ? Icon(Icons.favorite, color: Colors.red,)
                               : Icon(Icons.favorite_border)),
                         ],
                       ),
@@ -99,12 +100,12 @@ class _ProfileState extends State<Profile> {
               alignment: Alignment.topLeft,
               child: Text(
                 "Description:",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                style: descrStyle,
               ),
             ),
             SizedBox(height: 10),
             Text(
-              document['descriptor'],
+              document['descriptor'], style: paraStyle,
             ),
           ],
         ),
