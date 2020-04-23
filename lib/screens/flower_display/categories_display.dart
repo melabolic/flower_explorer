@@ -1,18 +1,21 @@
+// Adding the necessary imports
 import 'package:flower_explorer/screens/flower_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flower_explorer/services/firestore_db.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:strings/strings.dart';
 
-// this file creates the widgets that displays the flowers from the category in a horizontal
-// scroll orientation
+/* 
+  This file creates the widgets that displays the flowers from the category in a 
+  horizontal scroll orientation.
+*/
 
 class FlowerCarousel extends StatefulWidget {
   final String occasion;
-
   FlowerCarousel(this.occasion);
 
   @override
+  // passes on the name of the occasion to the state
   _FlowerCarouselState createState() => _FlowerCarouselState(this.occasion);
 }
 
@@ -25,19 +28,21 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          capitalize(occasion),
+          capitalize(occasion), // capitalizes the first letter of this string
           style: TextStyle(),
         ),
         centerTitle: true,
         backgroundColor: Colors.grey,
       ),
+      // This builder takes in a stream and outputs the flowers from this category in 
+      // a nicely formatted card arranged in a horizontally scrollable carousel
       body: StreamBuilder<QuerySnapshot>(
         stream:
             collection.where("occasion", arrayContains: occasion).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(), 
             );
           } else {
             return ListView(
@@ -49,7 +54,7 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
               ),
               children: snapshot.data.documents.map(
                 (DocumentSnapshot document) {
-                  // creating the box for the individual flowers in a carousel format
+                  // creating the card for the individual flowers 
                   return GestureDetector(
                     child: Padding(
                       padding: EdgeInsets.only(right: 20.0),
@@ -75,7 +80,7 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Align(
+                            Align( // prints the image
                               alignment: Alignment.center,
                               child: Image.network(
                                 document['image_url'],
@@ -84,7 +89,7 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
                               ),
                             ),
                             const SizedBox(height: 20.0),
-                            Text(
+                            Text( // prints the name of the flower
                               document['name'],
                               style: TextStyle(
                                 fontSize: 24.0,
@@ -92,7 +97,7 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
                               ),
                             ),
                             const SizedBox(height: 20.0),
-                            Text(
+                            Text( // prints a shortened version of the descriptor
                               document['descriptor'],
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -110,6 +115,7 @@ class _FlowerCarouselState extends State<FlowerCarousel> {
                       ),
                     ),
                     onTap: () {
+                      // directs the user to the specific flower profile when clicked on
                       Navigator.push(
                         context,
                         MaterialPageRoute(

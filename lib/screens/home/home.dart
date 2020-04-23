@@ -1,11 +1,11 @@
+// Adding the necessary imports
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flower_explorer/services/firestore_db.dart';
 import 'package:flutter/material.dart';
-
 import '../flower_profile.dart';
 
+// Builds the immutable Home widget
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
