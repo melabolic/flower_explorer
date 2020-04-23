@@ -1,87 +1,10 @@
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flower_explorer/screens/favorites/favorites.dart';
-import 'package:flower_explorer/screens/flower_display/flower_categories.dart';
-import 'package:flower_explorer/screens/flower_profile.dart';
 import 'package:flower_explorer/services/firestore_db.dart';
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-// building the home screen
-class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  // This navigator state will be used to navigate different pages
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-  int _selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    // Building the homescreen
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Text("Flower Explorer"),
-        ),
-        body: Navigator(
-          key: _navigatorKey,
-          onGenerateRoute: generateRoute,
-        ),
-        bottomNavigationBar: _buildNavigationBar(),
-      ),
-    );
-  }
-
-  Widget _buildNavigationBar() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          title: Text('Home'),
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite),
-          title: Text('Favorites'),
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.deepOrange,
-      onTap: _onItemTapped,
-    );
-  }
-
-  _onItemTapped(int tabIndex) {
-    switch (tabIndex) {
-      case 0:
-        _navigatorKey.currentState.pushReplacementNamed("Home");
-        break;
-      case 1:
-        _navigatorKey.currentState.pushReplacementNamed("Favorites");
-        break;
-    }
-    setState(() {
-      _selectedIndex = tabIndex;
-    });
-  }
-
-  Route<dynamic> generateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case "Favorites":
-        return MaterialPageRoute(builder: (context) => Favorites());
-      case "Categories":
-        return MaterialPageRoute(builder: (context) => Categories());
-      default:
-        return MaterialPageRoute(builder: (context) => Home());
-    }
-  }
-}
+import '../flower_profile.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -115,10 +38,13 @@ class Home extends StatelessWidget {
               ),
             ),
             onPressed: () {
+              /* when the user clicks on the "filter by occasion" button, it takes them
+              to the categories page */
               Navigator.of(context).pushNamed("Categories");
             },
           ),
           const SizedBox(height: 20.0),
+          // Button for users to select a random flower
           RaisedButton(
             child: Text("Get a random flower"),
             padding: EdgeInsets.symmetric(
@@ -131,16 +57,19 @@ class Home extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              int _len;
+              /* This entire function is responsible for obtaining an entry 
+              for a random flower */
               Random _rng = Random();
               collection.getDocuments().then(
                 (QuerySnapshot snapshot) {
-                  _len = snapshot.documents.length;
+                  int _len = snapshot.documents.length;
+                  int _index = _rng.nextInt(_len);
+                  
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => Profile(
-                        snapshot.documents[_rng.nextInt(_len)],
+                        snapshot.documents[_index],
                       ),
                     ),
                   );
