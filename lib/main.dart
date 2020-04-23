@@ -1,4 +1,5 @@
-import 'package:flower_explorer/screens/home/home.dart';
+/* This is the main file that executes our app */
+import 'package:flower_explorer/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());

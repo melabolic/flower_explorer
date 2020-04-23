@@ -1,12 +1,22 @@
+// Adding the necessary imports
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flower_explorer/assets/type_family.dart';
 import 'package:flutter/material.dart';
 import 'package:flower_explorer/services/firestore_db.dart';
 
+/* 
+  This class here builds the individual flower profiles when a user accesses it through
+  the favorites, random flower, or filtering by occasion options. It is a stateful widget
+  because we need to be able to update widgets based on changes made to the database. 
+*/
+
 class Profile extends StatefulWidget {
+  // takes in a document snapshot from whichever option it arrived from
   final DocumentSnapshot document;
   Profile(this.document);
 
   @override
+  // passes the document snapshot to the state of the widget
   _ProfileState createState() => _ProfileState(this.document);
 }
 
@@ -14,15 +24,21 @@ class _ProfileState extends State<Profile> {
   _ProfileState(this.document);
   DocumentSnapshot document;
 
+  // building the screen
   @override
   Widget build(BuildContext context) {
+    // initializing the document reference for easier access to the database
+    DocumentReference documentReference =
+        collection.document(document.documentID);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(document['name']),
+        title: Text(document['name'], style: barStyle),
         centerTitle: true,
         backgroundColor: Colors.grey,
       ),
       body: Container(
+        // the MediaQuery widgets help to obtain the respective sizes of the devices
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(
@@ -33,55 +49,80 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Align(
               alignment: Alignment.topRight,
-              child: RaisedButton(
-                child: _favButton(),
-                onPressed: () async {
-                  print("It was ${document['favorite']}");
-                  if (document['favorite']) {
-                    await collection.document(document.documentID).updateData(
-                      {"favorite": false},
-                    );
-                  } else {
-                    await collection.document(document.documentID).updateData(
-                      {"favorite": true},
-                    );
+              // creates a stream that listens to the main database and make updates
+              // for the favorites button
+              child: StreamBuilder(
+                stream: documentReference.snapshots(),
+                builder: (BuildContext context, AsyncSnapshot snap) {
+                  if (!snap.hasData) {
+                    return CircularProgressIndicator();
                   }
-                  setState(() {
-                    // TODO: find a way to update the button each time it is tapped on
-                  });
+                  // print(snap.data['name']); for testing purposes
+                  // print(snap.data['favorite']);
+
+                  // building the automatically configured (un)favorites button
+                  return FlatButton(
+                    child: Container(
+                      width: (snap.data['favorite'] ? 140 : 110),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          (snap.data['favorite']
+                              ? Text("UNFAVORITE", style: favButtonStyle,)
+                              : Text("FAVORITE", style: favButtonStyle,)),
+                          SizedBox(width: 12.0),
+                          (snap.data['favorite']
+                              ? Icon(Icons.favorite, color: Colors.red,)
+                              : Icon(Icons.favorite_border)),
+                        ],
+                      ),
+                    ),
+                    // the onPressed button simply updates the favorites value in the database
+                    onPressed: () async {
+                      bool _value = snap.data['favorite'] ? false : true;
+                      print(snap.data['favorite']);
+                      await documentReference.updateData({"favorite": _value});
+                      print(snap.data['favorite']);
+                    },
+                  );
                 },
               ),
             ),
+            // this creates an image of size 300x300 pixels
             Image.network(
-              widget.document['image_url'],
+              document['image_url'],
               height: 300,
               width: 300,
             ),
             SizedBox(height: 20.0),
+            // Prints out the flower description
+            Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Description:",
+                style: descrStyle,
+              ),
+            ),
+            SizedBox(height: 10),
             Text(
-              widget.document['descriptor'],
+              document['descriptor'], style: paraStyle,
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _favButton() {
-    return Container(
-      width: (document['favorite'] ? 182 : 140),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          (document['favorite']
-              ? Text("Remove from Favorites")
-              : Text("Add to Favorites")),
-          SizedBox(width: 12.0),
-          (document['favorite']
-              ? Icon(Icons.favorite)
-              : Icon(Icons.favorite_border)),
-        ],
-      ),
-    );
-  }
 }
+
+/* 
+if (document['favorite']) {
+                      await collection.document(document.documentID).updateData(
+                        {"favorite": true},
+                      );
+                    } else {
+                      await collection.document(document.documentID).updateData(
+                        {"favorite": true},
+                      );
+                    }
+                    setState(() {});
+*/
